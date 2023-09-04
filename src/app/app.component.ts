@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { trigger, state, style, transition, animate } from '@angular/animations'; 
+import { trigger, state, style, transition, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-root',
@@ -26,15 +26,16 @@ export class AppComponent {
 
   title = 'pomodoro timer'
   pageNumber = 'one'
-  workDuration = 25
-  breakDuration = 5
-  intervalWork: any = 0
-  intervalBreak: any = 0
+  workDuration: number = 25
+  breakDuration: number = 5
+  intervalWork: any
+  intervalBreak: any
   countDownWork = 0
   countDownBreak = 0
   minutes = 0
   seconds = 0
-  message = "get to work"
+  message = "Agora é só começar"
+  intervalActive: boolean = false
 
   toggle(pageNumber: string) {
     this.pageNumber = pageNumber;
@@ -42,15 +43,15 @@ export class AppComponent {
 
   increaseFocusTime() {
     this.workDuration += 1
-    this.minutes = this.workDuration 
+    this.minutes = this.workDuration
   }
 
   decreaseFocusTime() {
-    if(this.workDuration == 25) {
+    if (this.workDuration == 25) {
       this.workDuration = 25
     } else {
       this.workDuration -= 1
-      this.minutes = this.workDuration -1
+      this.minutes = this.workDuration - 1
     }
   }
 
@@ -59,9 +60,9 @@ export class AppComponent {
   }
 
   decreaseBreakTime() {
-    if(this.breakDuration == 5){
+    if (this.breakDuration == 5) {
       this.breakDuration = 5
-    } else{  
+    } else {
       this.breakDuration -= 1
     }
   }
@@ -69,53 +70,56 @@ export class AppComponent {
   load() {
     location.reload()
   }
+
   startWorkTime() {
-    this.countDownWork = (this.workDuration)*60
-    this.minutes = Math.floor(this.countDownWork/60)
-    this.seconds = (this.countDownWork % 60)
-    this.intervalWork = setInterval(() => workCounter(), 1000)
-    const workCounter = () => {
-      if (this.seconds === 0){
-        this.seconds = 60
-        this.minutes--
+    this.message = "Bons estudos"
+    this.intervalActive = true
+    this.countDownWork = (this.workDuration) * 60
+    this.minutes = Math.floor(this.countDownWork / 60)
+    this.seconds = this.countDownWork % 60
+    this.intervalWork = setInterval(() => {
+      if (this.seconds > 0) {
+        this.seconds--
       }
-      this.seconds--
-      if (this.minutes < 0) {
-        this.minutes = 0
-        this.seconds = 60
+      else if (this.minutes > 0) {
+        this.seconds = 59
+        this.minutes--
+      } else {
         clearInterval(this.intervalWork)
         return this.startRestTime()
       }
-      console.log("work - duration "+this.workDuration)
-      console.log("work - contador em segundos"+this.countDownWork)
-      console.log("work - minutos "+this.minutes)
-      console.log("work - segundos"+this.seconds)
+    }, 1000)
   }
-}
 
   startRestTime() {
-    this.message = "get some rest"
-    this.countDownBreak = (this.breakDuration)*60
-    this.minutes = Math.floor(this.countDownBreak/60)
+    this.message = "Descansa um pouquinho"
+    this.countDownBreak = (this.breakDuration) * 60
+    this.minutes = Math.floor(this.countDownBreak / 60)
     this.seconds = (this.countDownBreak % 60)
-    this.intervalBreak = setInterval(() => restCounter(), 1000)
-    const restCounter = () => {
-      if (this.seconds === 0){
-        this.seconds = 60
-        this.minutes--
+    this.intervalBreak = setInterval(() => {
+      if (this.seconds > 0) {
+        this.seconds--
       }
-      this.seconds--
-      if (this.minutes < 0 ){
+      else if (this.minutes > 0) {
+        this.seconds = 59
+        this.minutes--
+      } else {
         clearInterval(this.intervalBreak)
-        alert("your pomodoro timer is done")
-        this.message = "get to work"
+        alert("Acabou o tempo")
+        this.message = "Agora é só começar"
         this.minutes = 0
         this.seconds = 0
       }
-    }
-    console.log("rest - duration "+this.breakDuration)
-    console.log("rest - contador em segundos "+this.countDownBreak)
-    console.log("rest - minutos "+this.minutes)
-    console.log("rest - segundos "+this.seconds)
+    }, 1000)
+  }
+
+  stopBothTimers() {
+    clearInterval(this.intervalWork)
+    clearInterval(this.intervalBreak)
+    this.intervalActive = false
+    this.message = "Agora é só começar"
+    this.minutes = 0
+    this.seconds = 0
+    this.pageNumber = "one"
   }
 }

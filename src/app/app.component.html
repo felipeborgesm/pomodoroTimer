@@ -1,48 +1,50 @@
 <!DOCTYPE html>
 <html lang="pot">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body>
-  <div class="card">
-    <section class="position" [@pageNumber]="pageNumber">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <body>
+    <div class="card">
+      <section class="position" [@pageNumber]="pageNumber">
         <div class="flex">
-          <h1 class="title">set up focus</h1>
+          <h1 class="title">Tempo de foco</h1>
           <div class="counter">
-            <button class="text"(click)="decreaseFocusTime()">-</button>
+            <button class="text" (click)="decreaseFocusTime()">-</button>
             <div class="text" value="25">{{ workDuration }}</div>
             <button class="text" (click)="increaseFocusTime()">+</button>
           </div>
-        <button class="text" (click)="toggle('two')">next</button>
-      </div>
+          <button class="text" (click)="toggle('two')">Próximo</button>
+        </div>
 
-      <div class="flex">
-        <h1 class="title">set up break time</h1>
-        <div class="counter">
-          <button class="text" (click)="decreaseBreakTime()">-</button>
-          <div class="text" >{{ breakDuration }}</div>
-          <button class="text" (click)="increaseBreakTime()">+</button>
+        <div class="flex">
+          <h1 class="title">Tempo de descanso</h1>
+          <div class="counter">
+            <button class="text" (click)="decreaseBreakTime()">-</button>
+            <div class="text">{{ breakDuration }}</div>
+            <button class="text" (click)="increaseBreakTime()">+</button>
+          </div>
+          <div class="buttons">
+            <button class="text" (click)="toggle('one')">Voltar</button>
+            <button class="text" (click)="toggle('three')">Próximo</button>
+          </div>
         </div>
-        <div class="buttons">
-          <button class="text" (click)="toggle('one')">back</button>
-          <button class="text" (click)="toggle('three')">next</button>
-        </div>
-      </div>
-        
+
         <div class="flex">
           <h1 class="title">{{ message }}</h1>
           <div class="counter">
-            <div id="timer" >{{ minutes }}:{{ seconds }}</div>
+            <div id="timer">{{ minutes < 10 ? '0' + minutes : minutes }}:{{ seconds < 10 ? '0' + seconds : seconds  }}</div>
+          </div>
+          <div class="buttons" *ngIf="!intervalActive">
+            <button class="text" (click)="toggle('two')">Voltar</button>
+            <button class="text" (click)="startWorkTime()">Começar</button>
+          </div>
+          <div class="buttons" *ngIf="intervalActive">
+            <button class="text" (click)="stopBothTimers()">Cancelar</button>
+          </div>
         </div>
-        <div class="buttons">
-          <button class="text" (click)="toggle('two')">back</button>
-          <button class="text" (click)="startWorkTime()">start</button> 
-        </div>
-      </div>
-      
-    </section>
-  </div>
-</body>
+      </section>
+    </div>
+  </body>
 </html>
